@@ -94,7 +94,7 @@ No required themes. Suggested: **Realm** + **Tool** (the importable package).
 |---|---|
 | Live deployment | `https://latest.testnets.gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif` |
 | Repository | https://github.com/Zerxxz/kolektif |
-| Demo video | `demo/demo-kolektif.mp4` (50s) — upload to the DoraHacks video field |
+| Demo video | https://github.com/Zerxxz/kolektif/releases/download/v0.1.0-demo/demo-kolektif.mp4 (50s, also at `demo/demo-kolektif.mp4`) |
 | Package path | `gno.land/p/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif/rosca` |
 | Realm path | `gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif` |
 | Deploy tx (rosca) | `5iPsXbOBS/MPhzkXHn3uS1Ul212yeAT8A3hvOkO1he8=` @ height 1,361,013 |
