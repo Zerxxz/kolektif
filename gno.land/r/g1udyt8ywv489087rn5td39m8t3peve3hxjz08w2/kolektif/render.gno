@@ -10,8 +10,10 @@ import (
 	"gno.land/r/sys/users"
 )
 
-// pkgPath is this realm's own path, used to build action links.
-const pkgPath = "gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif"
+// pkgPath is the URL form of this realm's path, used to build links: gnoweb
+// serves a realm at /r/<pkgpath>, so a bare "gno.land/r/..." href would be
+// resolved as a relative URL by the browser and 404.
+const pkgPath = "/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif"
 
 // Render is the gnoweb view of the realm. Every page is Markdown that gnoweb
 // renders directly, so the app ships with no frontend at all: the "UI" is
@@ -413,14 +415,14 @@ func notFound(path string) string {
 }
 
 func createCLI() string {
-	return "gnokey maketx call -pkgpath \"" + pkgPath + "\" \\\n" +
+	return "gnokey maketx call -pkgpath \"gno.land" + pkgPath + "\" \\\n" +
 		"  -func \"Create\" -args \"Warung Crew\" -args 1000000 -args 3 -args 300 \\\n" +
 		"  -gas-fee 1000000ugnot -gas-wanted 50000000 \\\n" +
 		"  -chainid onyx-1 -remote https://rpc.onyx.testnets.gno.land:443 chime"
 }
 
 func clientCLI(c *Circle) string {
-	base := "gnokey maketx call -pkgpath \"" + pkgPath + "\" \\\n  -func \"Contribute\" -args " + strconv.FormatUint(c.ID, 10) + " \\\n" +
+	base := "gnokey maketx call -pkgpath \"gno.land" + pkgPath + "\" \\\n  -func \"Contribute\" -args " + strconv.FormatUint(c.ID, 10) + " \\\n" +
 		"  -send \"" + strconv.FormatInt(c.Params.Contribution, 10) + "ugnot\" \\\n" +
 		"  -gas-fee 1000000ugnot -gas-wanted 50000000 \\\n" +
 		"  -chainid onyx-1 -remote https://rpc.onyx.testnets.gno.land:443 chime"

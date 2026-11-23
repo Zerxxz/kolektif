@@ -92,6 +92,21 @@ kolektif.GlobalStats()                             // circles, active, escrowed,
 A gating realm can therefore require "address is a member in good standing of
 circle #7" before letting it vote, borrow, or claim a role.
 
+## Demo
+
+`demo/demo-kolektif.mp4` — 50 seconds, recorded from the real UI: index → an
+active circle → a completed circle, with the realm doing the escrow in between.
+Recorded on a local `gnodev` chain (`demo/record_demo.sh` drives it; the same
+pages are served by the onyx deployment once the packages are enabled).
+
+| File | What it shows |
+|---|---|
+| `screenshots/01-index.png` | stats, open and completed circles |
+| `screenshots/02-circle-active.png` | pot due, deadline, who has paid |
+| `screenshots/03-circle-complete.png` | three pots paid, collateral returned, residual 0 |
+| `screenshots/04-rules.png` | the payout-order guarantee |
+| `screenshots/05-about.png` | why a ROSCA, and the read-only API |
+
 ## Repository layout
 
 ```
