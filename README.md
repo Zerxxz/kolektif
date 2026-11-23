@@ -181,6 +181,10 @@ cancellation/refund paths, and a render smoke test over every page.
 - **Multi-denomination pots**: the package is denom-agnostic; the realm
   hard-codes `ugnot` today.
 
+## Source
+
+https://github.com/Zerxxz/kolektif
+
 ## License
 
 MIT. Built for the Gnome Tavern hackathon (gno.land, November–December 2026).

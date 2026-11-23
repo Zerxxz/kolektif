@@ -93,7 +93,7 @@ No required themes. Suggested: **Realm** + **Tool** (the importable package).
 | Field | Value |
 |---|---|
 | Live deployment | `https://latest.testnets.gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif` |
-| Repository | *(fill after GitHub push)* |
+| Repository | https://github.com/Zerxxz/kolektif |
 | Demo video | `demo/demo-kolektif.mp4` (50s) — upload to the DoraHacks video field |
 | Package path | `gno.land/p/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif/rosca` |
 | Realm path | `gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif` |
@@ -104,7 +104,7 @@ No required themes. Suggested: **Realm** + **Tool** (the importable package).
 
 - [x] Live deployment on the Gno.land **testnet** (onyx-1) — submitted; parked
       by the chain's `inert` policy until an approver enables it (see DEPLOY.md)
-- [x] Public code repository — *(push pending)*
+- [x] Public code repository — https://github.com/Zerxxz/kolektif
 - [x] Genuine Gno component — pure package + realm
 - [x] README explaining what it does and how to use it
 - [x] Demo video showing it working — `demo/demo-kolektif.mp4`
