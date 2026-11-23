@@ -1,0 +1,4 @@
+# local chain state and keys are never committed
+*.keys
+*.log
+.gno/
