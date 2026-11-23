@@ -7,7 +7,6 @@ import (
 
 	"gno.land/p/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif/rosca"
 	"gno.land/p/nt/ufmt/v0"
-	"gno.land/r/sys/users"
 )
 
 // pkgPath is the URL form of this realm's path, used to build links: gnoweb
@@ -386,12 +385,12 @@ func money(ugnot int64) string {
 	return rosca.Gnot(ugnot) + " GNOT"
 }
 
+// who renders an address as a link to its page inside this realm. It
+// deliberately does not import gno.land/r/sys/users: that realm's import
+// closure drags in gov/dao, which makes the package expensive to verify on a
+// chain that typechecks submissions off-chain before enabling them.
 func who(a address) string {
-	u := users.ResolveAddress(a)
-	if u != nil {
-		return u.RenderLink("")
-	}
-	return "`" + rosca.ShortAddr(a.String()) + "`"
+	return "[`" + rosca.ShortAddr(a.String()) + "`](" + pkgPath + ":member/" + a.String() + ")"
 }
 
 func helpLink(fn string) string {
