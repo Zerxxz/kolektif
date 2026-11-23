@@ -21,8 +21,8 @@ $ gnokey maketx addpkg -pkgpath gno.land/p/g1udyt8ywv489087rn5td39m8t3peve3hxjz0
     -gas-fee 1000000ugnot -gas-wanted 20000000 -chainid onyx-1 chime
 OK!
 GAS USED:   18266868
-HEIGHT:     1360357
-TX HASH:    rS5UBdp2TViOjpLUFkS0CjepDXP3aHh82i0alGl0JLE=
+HEIGHT:     1361013
+TX HASH:    5iPsXbOBS/MPhzkXHn3uS1Ul212yeAT8A3hvOkO1he8=
 ```
 
 **2. Realm — `kolektif`**
@@ -30,11 +30,11 @@ TX HASH:    rS5UBdp2TViOjpLUFkS0CjepDXP3aHh82i0alGl0JLE=
 ```
 $ gnokey maketx addpkg -pkgpath gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif \
     -pkgdir gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif \
-    -gas-fee 2000000ugnot -gas-wanted 60000000 -chainid onyx-1 chime
+    -gas-fee 3000000ugnot -gas-wanted 150000000 -chainid onyx-1 chime
 OK!
-GAS USED:   59121207
-HEIGHT:     1360362
-TX HASH:    NTZXlBtXAN72lJ/QslJ5cgKA45N3YBEQD4/mVphWPVY=
+GAS USED:   61818144
+HEIGHT:     1361023
+TX HASH:    lsn2zmI0fBFa+hQ1NSbe1CzgOYYNGA0GORcNaWBeDqU=
 ```
 
 ## The `inert` gate on onyx-1
@@ -109,7 +109,7 @@ gnokey maketx addpkg \
 gnokey maketx addpkg \
   -pkgpath "gno.land/r/$ADDR/kolektif" \
   -pkgdir "gno.land/r/$ADDR/kolektif" \
-  -gas-fee 2000000ugnot -gas-wanted 60000000 \
+  -gas-fee 3000000ugnot -gas-wanted 150000000 \
   -chainid onyx-1 -remote $RPC $KEY
 ```
 

@@ -154,11 +154,11 @@ gnodev . -home ~/.gno/demo \
 
 | What | Path | Transaction |
 |---|---|---|
-| `rosca` package | `gno.land/p/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif/rosca` | `rS5UBdp2TViOjpLUFkS0CjepDXP3aHh82i0alGl0JLE=` |
-| `kolektif` realm | `gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif` | `NTZXlBtXAN72lJ/QslJ5cgKA45N3YBEQD4/mVphWPVY=` |
+X
+| `kolektif` realm | `gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif` | `lsn2zmI0fBFa+hQ1NSbe1CzgOYYNGA0GORcNaWBeDqU=` |
 
-Chain: **onyx-1** (current gno.land testnet), submitted at heights 1,360,357 and
-1,360,362. onyx runs with `code_submission_policy=inert`, so a submitted package
+Chain: **onyx-1** (current gno.land testnet), submitted at heights 1,361,013 and
+1,361,023. onyx runs with `code_submission_policy=inert`, so a submitted package
 stays parked until the chain's approval oracle enables it; see `DEPLOY.md`.
 
 ## Tests
