@@ -181,6 +181,13 @@ cancellation/refund paths, and a render smoke test over every page.
 - **Multi-denomination pots**: the package is denom-agnostic; the realm
   hard-codes `ugnot` today.
 
+## Deployment status
+
+onyx-1 runs `code_submission_policy=inert`: a submitted package is stored but not
+enabled until the chain's approval oracle or an approver enables it. The current
+state, every transaction and what the chain reported are in
+[DEPLOY_STATUS.md](DEPLOY_STATUS.md).
+
 ## Source
 
 https://github.com/Zerxxz/kolektif
