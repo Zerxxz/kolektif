@@ -68,3 +68,9 @@ deploy transactions and this log. The submission states the deployment status
 honestly rather than hiding it, and the transaction hashes are independently
 verifiable on onyx. The moment the packages are enabled, `demo/auto_onyx.sh`
 submits the realm if needed, runs the lifecycle and prints every tx hash.
+
+## Escalation filed
+
+- Issue on the gno.land repo with the full evidence table:
+  https://github.com/gnolang/gno/issues/6527
+- Status board query per path: https://gpas.latest.testnets.gno.land/?path=<pkgpath>
