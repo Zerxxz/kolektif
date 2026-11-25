@@ -74,3 +74,27 @@ submits the realm if needed, runs the lifecycle and prints every tx hash.
 - Issue on the gno.land repo with the full evidence table:
   https://github.com/gnolang/gno/issues/6527
 - Status board query per path: https://gpas.latest.testnets.gno.land/?path=<pkgpath>
+
+## Bisect matrix (2026-11-25, all on onyx-1, same key)
+
+Every package below was submitted at the chain tip and read from
+`https://gpas.latest.testnets.gno.land/?path=<pkgpath>` ~9 minutes later.
+
+| package | shape | verdict |
+|---|---|---|
+| `probe3` | 1 function, no imports, `return "pong"` | **passed**, enabling in ~1h |
+| `probesha` | 1 function, `crypto/sha256` | **passed** |
+| `probestr` | 1 function, `strings` | **passed** |
+| `probenum` | 1 function, `strconv` | **passed** |
+| `sched3` | 49 lines, `strconv`+`strings`, loop + slice swap | `in review queue` |
+| `roscasched` | 80 lines, real code | `in review queue` |
+| `rosca` | 205 lines, real code | `in review queue` |
+| `kolektif` | the realm | `in review queue` |
+| `roscaslim` | 105 lines, deliberately broken | **`does not compile`** + errors in 1 min |
+
+The verifier is alive and fast for single-function packages, and it reports
+compile errors promptly. Anything that is an actual program - a loop, a slice,
+a couple of helpers - is never attempted: its row has no verdict timestamp.
+
+That is why this app is not live on onyx: a ROSCA realm is by nature more than
+one function. The same submissions run end-to-end on a local `gnodev` chain.
