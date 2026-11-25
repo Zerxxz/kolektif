@@ -1,7 +1,7 @@
 package kolektif
 
 import (
-	"gno.land/p/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif/rosca"
+	"gno.land/p/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/rosca"
 )
 
 // This file is the read-only surface of the realm. Any other realm, indexer or

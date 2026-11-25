@@ -3,7 +3,7 @@ package kolektif
 import (
 	"time"
 
-	"gno.land/p/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif/rosca"
+	"gno.land/p/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/rosca"
 )
 
 // Member is one seat in a circle.

@@ -9,7 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"gno.land/p/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif/rosca"
+	"gno.land/p/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/rosca"
+	"gno.land/p/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/roscasched"
 )
 
 // circles holds every circle ever created on this realm. A circle's ID is its
@@ -255,8 +256,8 @@ func activate(c *Circle) {
 		parts = append(parts, m.Addr.String())
 	}
 	height := runtime.ChainHeight()
-	c.Seed = rosca.Seed(c.ID, height, parts)
-	c.Order = rosca.Order(len(c.Members), c.Seed)
+	c.Seed = roscasched.Seed(c.ID, height, parts)
+	c.Order = roscasched.Order(len(c.Members), c.Seed)
 	c.ActivateHeight = height
 	c.Status = rosca.StatusActive
 	c.ActivatedAt = time.Now()

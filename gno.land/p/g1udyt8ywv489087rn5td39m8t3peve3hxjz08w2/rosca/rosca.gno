@@ -1,5 +1,11 @@
+// Package rosca holds the economics of a rotating savings circle (ROSCA):
+// parameters and validation, pot maths, exact penalty splitting, formatting.
+//
+// Deliberately small: on a chain that verifies packages off-chain before
+// enabling them, a package under the verifier's budget goes live in seconds.
+// The deterministic schedule lives in the sibling package roscasched.
 // Package rosca is a dependency-free toolkit for building rotating savings
-// and credit associations (ROSCA — "arisan", "tanda", "chit fund", "susus")
+// and credit associations (ROSCA - "arisan", "tanda", "chit fund", "susus")
 // on Gno.land.
 //
 // It contains no state and no realm capability of its own: the economics,
@@ -12,7 +18,6 @@
 package rosca
 
 import (
-	"crypto/sha256"
 	"errors"
 	"strconv"
 	"strings"
@@ -104,39 +109,6 @@ func (p Params) NetPerMember() int64 {
 	return p.Pot() - p.Contribution*int64(p.Size)
 }
 
-// Seed builds the activation seed for a circle. Mixing the circle ID, the
-// activation height and the sorted member set means the payout order cannot
-// be chosen by the creator after the fact, and every node derives the same
-// order from the same chain state.
-func Seed(circleID uint64, height int64, members []string) string {
-	parts := make([]string, len(members))
-	copy(parts, members)
-	sortStrings(parts)
-	return strconv.FormatUint(circleID, 10) + "|" +
-		strconv.FormatInt(height, 10) + "|" +
-		strings.Join(parts, ",")
-}
-
-// Order returns a deterministic permutation of 0..n-1 derived from seed.
-//
-// It is a Fisher-Yates shuffle over bytes of SHA-256(seed:counter), so the
-// same seed always yields the same order on every machine and every replay.
-func Order(n int, seed string) []int {
-	idx := make([]int, n)
-	for i := 0; i < n; i++ {
-		idx[i] = i
-	}
-	if n < 2 {
-		return idx
-	}
-	p := newPRNG(seed)
-	for i := n - 1; i > 0; i-- {
-		j := int(p.next() % uint64(i+1))
-		idx[i], idx[j] = idx[j], idx[i]
-	}
-	return idx
-}
-
 // Split divides amount into n shares. Any remainder goes one unit at a time
 // to the first shares, so the shares always add up to amount exactly.
 func Split(amount int64, n int) []int64 {
@@ -224,56 +196,10 @@ func Bar(done, total, width int) string {
 	return "[" + strings.Repeat("#", filled) + strings.Repeat("-", width-filled) + "]"
 }
 
-// ShortAddr shortens a bech32 address for tables: g1abc…wxyz.
+// ShortAddr shortens a bech32 address for tables: g1abc...wxyz.
 func ShortAddr(addr string) string {
 	if len(addr) <= 14 {
 		return addr
 	}
-	return addr[:7] + "…" + addr[len(addr)-4:]
-}
-
-// SortAddresses returns a sorted copy of the given addresses.
-func SortAddresses(addrs []string) []string {
-	out := make([]string, len(addrs))
-	copy(out, addrs)
-	sortStrings(out)
-	return out
-}
-
-// --- internals ---------------------------------------------------------
-
-// prng is a deterministic byte stream: SHA-256(seed:counter) concatenated.
-type prng struct {
-	seed string
-	buf  []byte
-	ctr  int
-}
-
-func newPRNG(seed string) *prng {
-	return &prng{seed: seed}
-}
-
-func (p *prng) next() uint64 {
-	for len(p.buf) < 8 {
-		h := sha256.Sum256([]byte(p.seed + ":" + strconv.Itoa(p.ctr)))
-		p.ctr++
-		p.buf = append(p.buf, h[:]...)
-	}
-	b := p.buf[:8]
-	p.buf = p.buf[8:]
-	var v uint64
-	for i := 0; i < 8; i++ {
-		v = v<<8 | uint64(b[i])
-	}
-	return v
-}
-
-// sortStrings is a small insertion sort: member sets are tiny, and this keeps
-// the package free of a sort import on every chain.
-func sortStrings(s []string) {
-	for i := 1; i < len(s); i++ {
-		for j := i; j > 0 && s[j] < s[j-1]; j-- {
-			s[j], s[j-1] = s[j-1], s[j]
-		}
-	}
+	return addr[:7] + "..." + addr[len(addr)-4:]
 }
