@@ -98,3 +98,31 @@ a couple of helpers - is never attempted: its row has no verdict timestamp.
 
 That is why this app is not live on onyx: a ROSCA realm is by nature more than
 one function. The same submissions run end-to-end on a local `gnodev` chain.
+
+## 2026-11-26 17:20 UTC — enabled: identical resubmissions are ignored, new bytes are verified in seconds
+
+The oracle is processing real programs again (onyx last pass 17:08:02Z; realms
+like `proofloom/core`, `continuity`, `escrowmath` passed the same hour). Our
+packages did not move when resubmitted **byte-identically** (heights 1,431,041 /
+1,431,045 at 17:03-17:04Z, still `in review queue` 15 minutes later).
+
+The fix was one comment line. Adding `// rev 2026-11-26T17:20Z …` to each file
+changed the content hash and the same code was verified in seconds:
+
+| Path | Tx | Height | Verdict |
+|---|---|---|---|
+| `gno.land/p/<addr>/roscasched` | `fxmsJuXnQmTTVrAOExoz1S+nYIeskzZtM6pTKyZK+d0=` | 1,431,294 | **passed, enabling at 18:19:46Z** |
+| `gno.land/p/<addr>/rosca` | `h++gCE80JlVB6lhvre+y8wZXFmdJNdUfX38ydsCTkgA=` | 1,431,295 | **passed, enabling at 18:19:46Z** |
+| `gno.land/r/<addr>/kolektif` | `olDlWbciUgU0ES7DXy53K2JopsEYqKFWNw8MbfI16+k=` | 1,431,467 | submitted after the libs passed; awaiting verdict |
+
+So "verification cost is not a function of line count" was the wrong read: the
+oracle silently drops a submission whose content it has already queued, and
+processes genuinely new content immediately. One comment line per file is enough
+to get a fresh verdict; no refactor, no split, no size bisect needed.
+
+`gno lint` / `gno test` on this host need `GNOROOT=$HOME/gno-src` (release
+binaries bake `/__w/gno/gno`), and the deploy dirs must exclude `*_test.gno`.
+
+Watch job: cron `kolektif-onyx-live-watch` (every 10 min) renders the realm, and
+the moment it is live runs `demo/run_onyx.sh` (alice/bob/carol, 3 seats, 3 rounds)
+and prints every tx hash.

@@ -1,3 +1,4 @@
+// rev 2026-11-26T17:20Z — resubmitted while the gpao oracle is enabling programs
 // Package roscasched derives the payout order of a rotating savings circle.
 //
 // The order is a Fisher-Yates shuffle over SHA-256(circle id | activation

@@ -1,3 +1,4 @@
+// rev 2026-11-26T17:20Z — resubmitted while the gpao oracle is enabling programs
 // Package rosca holds the economics of a rotating savings circle (ROSCA):
 // parameters and validation, pot maths, exact penalty splitting, formatting.
 //
