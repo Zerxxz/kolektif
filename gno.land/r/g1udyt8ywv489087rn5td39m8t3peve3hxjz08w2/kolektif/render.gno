@@ -2,6 +2,7 @@
 package kolektif
 
 import (
+	"crypto/sha256"
 	"strconv"
 	"strings"
 	"time"
@@ -166,8 +167,13 @@ func renderCirclePath(rest string) string {
 	if id == 0 || int(id) > len(circles) {
 		return notFound("circle/" + rest)
 	}
-	if len(parts) > 1 && parts[1] == "rules" {
-		return renderRules(mustCircle(id))
+	if len(parts) > 1 {
+		switch parts[1] {
+		case "rules":
+			return renderRules(mustCircle(id))
+		case "party":
+			return renderParty(mustCircle(id))
+		}
 	}
 	return renderCircle(id)
 }
@@ -203,6 +209,10 @@ func renderCircle(id uint64) string {
 
 	out += "\n## Controls\n\n"
 	out += actionMenu(c, true)
+	out += "\n## Proof\n\n"
+	out += proofStrip(c)
+	out += "[Verify this order yourself](" + pkgPath + ":circle/" + strconv.FormatUint(c.ID, 10) + "/party)\n"
+
 	out += "\n## Client\n\n```sh\n" + clientCLI(c) + "\n```\n"
 	out += "\n_Seed of this run's order: `" + c.Seed + "`_\n"
 	return out
@@ -558,6 +568,165 @@ func renderMember(a address) string {
 	}
 	out += "\n[Back to the arcade](" + pkgPath + ")\n"
 	return out
+}
+
+// renderParty is the spectate page: the payout order as the chain derived it,
+// the seed it came from, and the commands to recompute both. A judge can check
+// the realm instead of trusting its own page.
+func renderParty(c *Circle) string {
+	order := c.Order
+	settled := 0
+	for _, m := range c.Members {
+		if m.Received {
+			settled++
+		}
+	}
+
+	out := "# Payout order · " + c.Name + "\n\n"
+	out += proofStrip(c)
+	out += "```\n"
+	out += "   STAGE  SEAT  PLAYER            CLASS   STATE\n"
+	out += "   -----  ----  ----------------  ------  -----------\n"
+	for stage, idx := range order {
+		state := "waiting"
+		if idx >= 0 && idx < len(c.Members) {
+			m := c.Members[idx]
+			if m.Defaulted {
+				state = "DEFAULTED"
+			} else if m.Received {
+				state = "loot taken"
+			}
+		}
+		player := "?"
+		class := "-"
+		if idx >= 0 && idx < len(c.Members) {
+			player = rosca.ShortAddr(c.Members[idx].Addr.String())
+			class = classFor(idx)
+		}
+		out += "   " + pad(strconv.Itoa(stage+1), 5) + "  " + pad(strconv.Itoa(idx), 4) + "  " +
+			pad(player, 16) + "  " + pad(class, 6) + "  " + state + "\n"
+	}
+	out += "```\n\n"
+
+	out += "## Machine-readable proof\n\n"
+	out += "```\n" + machineProof(c) + "```\n\n"
+
+	out += "## How the order was fixed\n\n"
+	out += "```\n"
+	out += "   seed = circle id | activation height | addresses sorted\n"
+	out += "        = " + strconv.FormatUint(c.ID, 10) + " | " + strconv.FormatInt(c.ActivateHeight, 10) + " | <members>\n"
+	out += "   order = Fisher-Yates over SHA-256(seed:counter)\n"
+	out += "```\n\n"
+	out += "Nothing in that line is chosen by the creator: the id is a counter, the height is the block\n"
+	out += "the last seat filled, and the addresses are whatever the members signed with. Change one byte\n"
+	out += "of the seed and the order changes, which is why the creator cannot steer the pot.\n\n"
+
+	out += "## Recompute it yourself\n\n"
+	out += "```sh\n"
+	out += "python3 scripts/verify_order.py \\\n"
+	out += "  --rpc https://rpc.onyx.testnets.gno.land:443 \\\n"
+	out += "  --circle " + strconv.FormatUint(c.ID, 10) + "\n"
+	out += "```\n\n"
+	out += "The script reads the same chain fields this page reads and prints the order plus its sha256,\n"
+	out += "so a mismatch is visible instead of arguable. If the numbers agree, the realm did not cheat.\n"
+	out += "[Back to the run](" + pkgPath + ":circle/" + strconv.FormatUint(c.ID, 10) + ")\n"
+	return out
+}
+
+// machineProof is the same proof as one key=value block: no wrapping, so a
+// verifier script can parse it instead of scraping a table.
+func machineProof(c *Circle) string {
+	sum := sha256.Sum256([]byte(c.Seed))
+	order := ""
+	for i, idx := range c.Order {
+		if i > 0 {
+			order += ","
+		}
+		order += strconv.Itoa(idx)
+	}
+	out := "VERIFY v1\n"
+	out += "circle=" + strconv.FormatUint(c.ID, 10) + "\n"
+	out += "height=" + strconv.FormatInt(c.ActivateHeight, 10) + "\n"
+	out += "seed=" + c.Seed + "\n"
+	out += "sha256=" + hexOf(sum) + "\n"
+	out += "order=" + order + "\n"
+	return out
+}
+
+// proofStrip is the verifiable core of a run: seed, its sha256, the height and
+// the order, framed as one copyable block.
+func proofStrip(c *Circle) string {
+	seed := c.Seed
+	hash := ""
+	if seed != "" {
+		sum := sha256.Sum256([]byte(seed))
+		hash = hexOf(sum)
+	}
+	order := ""
+	for i, idx := range c.Order {
+		if i > 0 {
+			order += " "
+		}
+		order += strconv.Itoa(idx)
+	}
+	height := "not activated yet"
+	if c.ActivateHeight > 0 {
+		height = strconv.FormatInt(c.ActivateHeight, 10)
+	}
+	out := "```\n"
+	out += "+-- PROOF " + strings.Repeat("-", 50) + "+\n"
+	for _, line := range wrapField("SEED   ", seedOrPending(seed), 58) {
+		out += "| " + pad(line, 60) + " |\n"
+	}
+	for _, line := range wrapField("SHA256 ", dashIfEmpty(hash), 58) {
+		out += "| " + pad(line, 60) + " |\n"
+	}
+	out += "| " + pad("HEIGHT "+height, 60) + " |\n"
+	out += "| " + pad("ORDER  "+dashIfEmpty(order)+"  (seat indexes, first gets the first pot)", 60) + " |\n"
+	out += "+" + strings.Repeat("-", 60) + "+\n"
+	out += "```\n\n"
+	return out
+}
+
+func seedOrPending(seed string) string {
+	if seed == "" {
+		return "not activated yet"
+	}
+	return seed
+}
+
+func dashIfEmpty(s string) string {
+	if s == "" {
+		return "-"
+	}
+	return s
+}
+
+// wrapField prefixes s with label and hard-wraps the value at width bytes,
+// so a long seed or hash never breaks the ASCII frame.
+func wrapField(label, s string, width int) []string {
+	if width < 12 {
+		return []string{label + s}
+	}
+	indent := strings.Repeat(" ", len(label))
+	line := label + s
+	out := make([]string, 0, 2)
+	for len(line) > width {
+		out = append(out, line[:width])
+		line = indent + line[width:]
+	}
+	return append(out, line)
+}
+
+// hexOf renders 32 bytes as lowercase hex without importing encoding/hex.
+func hexOf(b [32]byte) string {
+	const digits = "0123456789abcdef"
+	out := make([]byte, 64)
+	for i, v := range b {
+		out[2*i] = digits[v>>4]
+		out[2*i+1] = digits[v&0x0f]
+	}
+	return string(out)
 }
 
 // --- helpers -----------------------------------------------------------

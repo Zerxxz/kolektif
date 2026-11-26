@@ -195,3 +195,23 @@ https://github.com/Zerxxz/kolektif
 ## License
 
 MIT. Built for the Gnome Tavern hackathon (gno.land, November–December 2026).
+
+## Brand
+
+`brand/kolektif-logo.png` (1600x512), `brand/kolektif-logo-dark.png`, `brand/kolektif-mark.png`
+(square avatar). Regenerate with `python3 tools/make_logo.py` — every edge is drawn at 1x and
+upscaled with NEAREST, so the pixel grid stays honest.
+
+## Spectating and verifying a run
+
+Every run has a proof page: `:circle/<id>/party` prints the payout order, the seed it came from,
+its sha256, the activation height, and a `VERIFY v1` block for machines. The run page links to it
+from its **Proof** section.
+
+```sh
+python3 scripts/verify_order.py --rpc https://rpc.onyx.testnets.gno.land:443 --circle 2
+```
+
+The script rebuilds the Fisher-Yates order from the seed (same SHA-256(seed:counter) stream the
+realm uses) and prints PASS/FAIL. A mismatch is visible instead of arguable: the page cannot claim
+an order the seed does not produce.
