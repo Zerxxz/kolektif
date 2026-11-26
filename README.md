@@ -199,8 +199,10 @@ MIT. Built for the Gnome Tavern hackathon (gno.land, November–December 2026).
 ## Brand
 
 `brand/kolektif-logo.png` (1600x512), `brand/kolektif-logo-dark.png`, `brand/kolektif-mark.png`
-(square avatar). Regenerate with `python3 tools/make_logo.py` — every edge is drawn at 1x and
-upscaled with NEAREST, so the pixel grid stays honest.
+(square avatar), `brand/kolektif-social-card.png` (1200x630 thumbnail). Regenerate with
+`python3 tools/make_logo.py` — every edge is drawn at 1x and upscaled with NEAREST, so the pixel
+grid stays honest. The generator self-tests its 5x7 glyph table before writing, so a missing letter
+fails the build instead of silently clipping a word.
 
 ## Spectating and verifying a run
 

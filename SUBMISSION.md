@@ -152,3 +152,59 @@ gnokey maketx call -pkgpath "gno.land/r/$ADDR/kolektif" -func Create \
 
 Then: re-take the 5 screenshots against the testnet URL, re-record or re-link the
 video, and replace the "Deployed" table with the onyx tx hashes.
+
+---
+
+## 9. Brand assets
+
+| File | Use |
+|---|---|
+| `brand/kolektif-logo.png` (1600x512) | listing header / README |
+| `brand/kolektif-logo-dark.png` | same lockup on pure black |
+| `brand/kolektif-mark.png` (576x576) | square avatar / favicon |
+| `brand/kolektif-social-card.png` (1200x630) | DoraHacks thumbnail, posts |
+
+Regenerate with `python3 tools/make_logo.py` (Pillow, no image model): the mark is a stack of
+coins inside two rotation arrows — the pot that goes round — drawn at 1x and upscaled with
+NEAREST so the pixel grid stays honest. The generator self-tests its glyph table before writing,
+so a missing letter fails the build instead of silently clipping a word.
+
+## 10. Spectating and verifying (judge-facing)
+
+Every run has a proof page: `:circle/<id>/party` (linked from the run page's **Proof** section).
+It prints, in plain ASCII:
+
+- the payout **order** with seat, player and class per stage;
+- the **seed** it was derived from, its **sha256**, and the **activation height**;
+- a `VERIFY v1` block (`circle=`, `height=`, `seed=`, `sha256=`, `order=`) made for machines;
+- the one command that recomputes it:
+
+```sh
+python3 scripts/verify_order.py --rpc https://rpc.onyx.testnets.gno.land:443 --circle 2
+```
+
+The script fetches that block over ABCI (no wallet, no SDK), rebuilds the Fisher-Yates order from
+the seed with the same `SHA-256(seed:counter)` stream the realm uses, and prints PASS/FAIL. Run
+against the local dev chain it prints:
+
+```
+sha256     5a11b45a...bdbf  ok
+order page 0,1,2
+order calc 0,1,2
+PASS: the order is exactly what the seed produces
+```
+
+That is the difference between "trust our dashboard" and "check our dashboard".
+
+## 11. Accounting invariant (audited 2026-11-26)
+
+The realm keeps a per-circle `Pool` next to the on-chain balance. Every exit path now ends with
+`Pool == 0` — including the two that used to strand money:
+
+- **every seat defaulted** → residual returns to the circle's creator (`ResidualReturned`);
+- **a round collected money with nobody left to receive it** → the round is refunded to the
+  players who paid it (`PotReturned`).
+
+Both are covered by regression tests (`TestAllDefaultStrandsPool`,
+`TestPotReturnedWhenNoBeneficiaryLeft`) that fail on the pre-fix code with
+`circle pool should be zeroed, got 3000000 ugnot`.
