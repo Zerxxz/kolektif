@@ -282,7 +282,16 @@ func settle(cur realm, c *Circle) {
 		}
 	}
 	bi := c.NextBeneficiary()
-	if bi < 0 || pot <= 0 {
+	if bi < 0 {
+		// Nobody is left to receive: every remaining seat either received
+		// already or defaulted. The money collected this round belongs to the
+		// members who paid it, so it goes back to them instead of sitting in
+		// the realm with no claimant (audit finding, 2026-11-26).
+		returnPot(cur, c, pot)
+		finish(cur, c)
+		return
+	}
+	if pot <= 0 {
 		finish(cur, c)
 		return
 	}
@@ -314,7 +323,9 @@ func settle(cur realm, c *Circle) {
 }
 
 // finish closes the circle: every honest member gets their collateral back
-// plus an equal share of the slashed penalty fund.
+// plus an equal share of the slashed penalty fund. When every seat defaulted
+// there is nobody to refund, so the residual pool goes back to the creator
+// instead of staying in the realm with no claimant.
 func finish(cur realm, c *Circle) {
 	honest := make([]*Member, 0, len(c.Members))
 	for _, m := range c.Members {
@@ -322,29 +333,96 @@ func finish(cur realm, c *Circle) {
 			honest = append(honest, m)
 		}
 	}
-	shares := rosca.Split(c.Penalty, len(honest))
-	for i, m := range honest {
-		amount := m.Collateral + shares[i]
-		if amount <= 0 {
-			continue
+	if len(honest) == 0 {
+		returnResidual(cur, c, "every seat defaulted")
+	} else {
+		shares := rosca.Split(c.Penalty, len(honest))
+		for i, m := range honest {
+			amount := m.Collateral + shares[i]
+			if amount <= 0 {
+				continue
+			}
+			sendUgnot(cur, c, m.Addr, amount)
+			c.Payouts = append(c.Payouts, Payout{
+				Round:  -1,
+				To:     m.Addr,
+				Amount: amount,
+				At:     time.Now(),
+				Kind:   "refund",
+			})
+			m.Collateral = 0
 		}
-		sendUgnot(cur, c, m.Addr, amount)
-		c.Payouts = append(c.Payouts, Payout{
-			Round:  -1,
-			To:     m.Addr,
-			Amount: amount,
-			At:     time.Now(),
-			Kind:   "refund",
-		})
-		m.Collateral = 0
 	}
 	c.Penalty = 0
+	// Last line of defence: a circle that closes must not leave value behind.
+	if c.Pool > 0 {
+		returnResidual(cur, c, "rounding residual")
+	}
 	c.Status = rosca.StatusComplete
 	c.ClosedAt = time.Now()
 
 	chain.Emit("CircleClosed",
 		"id", strconv.FormatUint(c.ID, 10),
 		"paidOut", strconv.FormatInt(c.PaidOutTotal, 10),
+	)
+}
+
+// returnPot refunds a round's collected contributions to the members who paid
+// it, used when no seat is left to receive the pot.
+func returnPot(cur realm, c *Circle, pot int64) {
+	if pot <= 0 {
+		return
+	}
+	payers := make([]address, 0, len(c.Members))
+	for _, m := range c.Members {
+		if !m.Defaulted && m.PaidRound == c.Round {
+			payers = append(payers, m.Addr)
+		}
+	}
+	if len(payers) == 0 {
+		return
+	}
+	shares := rosca.Split(pot, len(payers))
+	for i, a := range payers {
+		if shares[i] <= 0 {
+			continue
+		}
+		sendUgnot(cur, c, a, shares[i])
+		c.Payouts = append(c.Payouts, Payout{
+			Round:  c.Round,
+			To:     a,
+			Amount: shares[i],
+			At:     time.Now(),
+			Kind:   "return",
+		})
+	}
+	chain.Emit("PotReturned",
+		"id", strconv.FormatUint(c.ID, 10),
+		"round", strconv.Itoa(c.Round),
+		"amount", strconv.FormatInt(pot, 10),
+	)
+}
+
+// returnResidual sends whatever the pool still holds to the circle's creator,
+// so a closed circle never leaves money stranded in the realm.
+func returnResidual(cur realm, c *Circle, why string) {
+	amount := c.Pool
+	if amount <= 0 {
+		return
+	}
+	sendUgnot(cur, c, c.Creator, amount)
+	c.Payouts = append(c.Payouts, Payout{
+		Round:  -1,
+		To:     c.Creator,
+		Amount: amount,
+		At:     time.Now(),
+		Kind:   "residual",
+	})
+	chain.Emit("ResidualReturned",
+		"id", strconv.FormatUint(c.ID, 10),
+		"to", c.Creator.String(),
+		"amount", strconv.FormatInt(amount, 10),
+		"why", why,
 	)
 }
 
