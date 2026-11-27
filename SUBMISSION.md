@@ -208,3 +208,25 @@ The realm keeps a per-circle `Pool` next to the on-chain balance. Every exit pat
 Both are covered by regression tests (`TestAllDefaultStrandsPool`,
 `TestPotReturnedWhenNoBeneficiaryLeft`) that fail on the pre-fix code with
 `circle pool should be zeroed, got 3000000 ugnot`.
+
+---
+
+## 12. Filed on DoraHacks (2026-11-27 00:00 UTC)
+
+| Field | Value |
+|---|---|
+| BUIDL | **52072** — https://dorahacks.io/build/52072 |
+| Hackathon | Gnome Tavern (id 2470) · track **Default Track** (4783) |
+| Submission id | **57867** |
+| Status | `0` = DEFAULT — submitted, awaiting organiser confirm (public list shows CONFIRMED only) |
+| Logo uploaded | https://cdn.dorahacks.io/static/files/1a21a49a6e66a3576a75a5c4340815e9.png |
+| Repo / video | github.com/Zerxxz/kolektif · raw demo-kolektif.mp4 |
+| Contacts | discord `axlecrack`, telegram `Nugraha02` |
+
+Form answers: deployment link `https://gno.land/r/<addr>/kolektif`, realm path
+`gno.land/r/<addr>/kolektif`, project = new (built 24-27 Nov), country Indonesia, contact as above, KYC = Yes.
+
+**One open gate:** the deployment link only resolves once onyx-1's approval oracle enables the realm. The
+url is final and correct; the submission is filed with it. `kolektif-onyx-live-watch` (cron, 10 min) runs the
+lifecycle the moment the realm renders, and `gpas.latest.testnets.gno.land/?path=…` is the verdict board to
+quote if an organiser asks where the deployment stands.

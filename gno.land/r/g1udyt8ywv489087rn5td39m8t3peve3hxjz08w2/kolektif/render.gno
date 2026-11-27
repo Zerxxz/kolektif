@@ -1,3 +1,4 @@
+// rev 2026-11-26T23:57Z — resubmitted for the hackathon submission window
 // rev 2026-11-26T18:05Z — pixel-arcade dashboard + audit fixes
 package kolektif
 
