@@ -94,7 +94,7 @@ No required themes. Suggested: **Realm** + **Tool** (the importable package).
 |---|---|
 | Live deployment | `https://latest.testnets.gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif` |
 | Repository | https://github.com/Zerxxz/kolektif |
-| Demo video | https://github.com/Zerxxz/kolektif/releases/download/v0.1.0-demo/demo-kolektif.mp4 (50s, also at `demo/demo-kolektif.mp4`) |
+| Demo video | https://raw.githubusercontent.com/Zerxxz/kolektif/master/demo/demo-kolektif.mp4 — **79s, 1080p, voice-over** (new cut; the source file is also kept as `demo/kolektif-demo-vo.mp4`) |
 | Package path | `gno.land/p/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif/rosca` |
 | Realm path | `gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif` |
 | Deploy tx (rosca) | `5iPsXbOBS/MPhzkXHn3uS1Ul212yeAT8A3hvOkO1he8=` @ height 1,361,013 |
@@ -107,7 +107,7 @@ No required themes. Suggested: **Realm** + **Tool** (the importable package).
 - [x] Public code repository — https://github.com/Zerxxz/kolektif
 - [x] Genuine Gno component — pure package + realm
 - [x] README explaining what it does and how to use it
-- [x] Demo video showing it working — `demo/demo-kolektif.mp4`
+- [x] Demo video showing it working — `demo/demo-kolektif.mp4` (79s 1080p voice-over; 4 steps: open, join, pay, pot released)
 - [x] Short description — section 3 above
 - [x] Name does not use a "Gno" prefix
 
@@ -220,7 +220,7 @@ Both are covered by regression tests (`TestAllDefaultStrandsPool`,
 | Submission id | **57867** |
 | Status | `0` = DEFAULT — submitted, awaiting organiser confirm (public list shows CONFIRMED only) |
 | Logo uploaded | https://cdn.dorahacks.io/static/files/1a21a49a6e66a3576a75a5c4340815e9.png |
-| Repo / video | github.com/Zerxxz/kolektif · raw demo-kolektif.mp4 |
+| Repo / video | github.com/Zerxxz/kolektif · raw `demo/demo-kolektif.mp4` (79s 1080p voice-over, 23.3 MB) |
 | Contacts | discord `axlecrack`, telegram `Nugraha02` |
 
 Form answers: deployment link `https://gno.land/r/<addr>/kolektif`, realm path
