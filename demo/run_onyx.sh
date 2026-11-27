@@ -36,7 +36,9 @@ say "checking $PKG"
 if ! gnokey query vm/qrender -data "$PKG:" -remote "$RPC" >/tmp/onyx_render.txt 2>&1; then
   say "realm not live yet (still parked or not found)"; exit 2
 fi
-if grep -q "Warung Crew" /tmp/onyx_render.txt; then
+# the empty board also prints "Warung Crew" inside its gnokey hint, so gate on a
+# rendered run card instead of the name
+if grep -q "RUN #1" /tmp/onyx_render.txt; then
   say "circle already exists, nothing to do"; exit 0
 fi
 say "realm is LIVE — starting the lifecycle"

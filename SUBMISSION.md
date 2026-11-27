@@ -223,10 +223,11 @@ Both are covered by regression tests (`TestAllDefaultStrandsPool`,
 | Repo / video | github.com/Zerxxz/kolektif · raw `demo/demo-kolektif.mp4` (79s 1080p voice-over, 23.3 MB) |
 | Contacts | discord `axlecrack`, telegram `Nugraha02` |
 
-Form answers: deployment link `https://gno.land/r/<addr>/kolektif`, realm path
+Form answers: deployment link **https://onyx.testnets.gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif**, realm path
 `gno.land/r/<addr>/kolektif`, project = new (built 24-27 Nov), country Indonesia, contact as above, KYC = Yes.
 
-**One open gate:** the deployment link only resolves once onyx-1's approval oracle enables the realm. The
-url is final and correct; the submission is filed with it. `kolektif-onyx-live-watch` (cron, 10 min) runs the
-lifecycle the moment the realm renders, and `gpas.latest.testnets.gno.land/?path=…` is the verdict board to
-quote if an organiser asks where the deployment stands.
+**Deployment is live.** The oracle enabled the realm (verdict `passed`, 2026-11-27T02:18:39Z) and the
+lifecycle has run on it: one circle, three members, three rounds, 12 GNOT settled. Live page:
+**https://onyx.testnets.gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif** (the first publish used the mainnet host
+`gno.land`, which cannot serve an onyx realm; it was corrected with `PUT /hub/hackathons/2470/buidls/57867`
+and the submission stayed `CONFIRMED`).

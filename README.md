@@ -17,6 +17,11 @@
 </p>
 
 <p align="center">
+  <a href="https://onyx.testnets.gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif"><b>Live on Gno.land testnet (onyx-1) →</b></a><br>
+  <code>https://onyx.testnets.gno.land/r/g1udyt8ywv489087rn5td39m8t3peve3hxjz08w2/kolektif</code>
+</p>
+
+<p align="center">
   <img src="screenshots/pixel-board.png" alt="The Kolektif quest board, rendered by the realm" width="820">
 </p>
 
