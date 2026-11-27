@@ -110,7 +110,11 @@ circle #7" before letting it vote, borrow, or claim a role.
 
 ## Demo
 
-`demo/demo-kolektif.mp4` ([direct link](https://github.com/Zerxxz/kolektif/releases/download/v0.1.0-demo/demo-kolektif.mp4)) — 50 seconds, recorded from the real UI: index → an
+**[Watch the 79s walkthrough (1080p, voice-over)](https://github.com/Zerxxz/kolektif/releases/download/v0.2.0-demo/kolektif-demo-vo.mp4)** —
+the realm on screen the whole time: open a run → seat three players → pay three rounds →
+the last payer releases the pot → collateral returns and the run closes at zero.
+
+`demo/demo-kolektif.mp4` ([direct link](https://raw.githubusercontent.com/Zerxxz/kolektif/master/demo/demo-kolektif.mp4)) — same cut, from the real UI: index → an
 active circle → a completed circle, with the realm doing the escrow in between.
 Recorded on a local `gnodev` chain (`demo/record_demo.sh` drives it; the same
 pages are served by the onyx deployment once the packages are enabled).
